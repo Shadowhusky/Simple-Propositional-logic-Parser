@@ -1,0 +1,20 @@
+(-(p^q)^(p^q)) is a binary. The first part is -(p^q) and the second part is (p^q)  
+(-(p^q)^(p^q)) is not satisfiable.
+(p^-p) is a binary. The first part is p and the second part is -p  
+(p^-p) is not satisfiable.
+((p>q)^(q>r)) is a binary. The first part is (p>q) and the second part is (q>r)  
+((p>q)^(q>r)) is not satisfiable.
+((p>q)^(p^-q)) is a binary. The first part is (p>q) and the second part is (p^-q)  
+((p>q)^(p^-q)) is not satisfiable.
+((r^-r)v(r^r)) is a binary. The first part is (r^-r) and the second part is (r^r)  
+((r^-r)v(r^r)) is not satisfiable.
+(((pvr)^(q^r))^-r) is a binary. The first part is ((pvr)^(q^r)) and the second part is -r  
+(((pvr)^(q^r))^-r) is not satisfiable.
+((p^q)^(r^p)) is a binary. The first part is (p^q) and the second part is (r^p)  
+((p^q)^(r^p)) is satisfiable.
+((p>r)^(r>p)) is a binary. The first part is (p>r) and the second part is (r>p)  
+((p>r)^(r>p)) is not satisfiable.
+((q^r)>p) is a binary. The first part is (q^r) and the second part is p  
+((q^r)>p) is satisfiable.
+((q^q)^(r^-r)) is a binary. The first part is (q^q) and the second part is (r^-r)  
+((q^q)^(r^-r)) is not satisfiable.
