@@ -5,7 +5,7 @@
 
 
 int Fsize=50; /*maximum formula length*/
-int inputs =10;/* number of formulas expected in input.txt*/
+int inputs =20;/* number of formulas expected in input.txt*/
 int i;/* in case you need it */
 int ThSize=100;/* maximum size of set of formulas*/
 int TabSize=500; /*maximum length of tableau queue*/
@@ -317,6 +317,8 @@ int isContradiction(char* input_1, char* input_2){
 
 int closed(char** tableau) {
 
+  int numberOfPaths = 1;
+  int numberOfClosedPaths = 0;
   int** stringStack = (int**) malloc((100)*sizeof(int*));
   for (size_t i = 0; i < 100; i++)
   {
@@ -337,6 +339,8 @@ int closed(char** tableau) {
       {
         if (numberOfstars < currentStackIndex)  //Backtraking(When walk to the end of path)
         {
+          
+          numberOfPaths++;
           currentStackIndex = numberOfstars;
 
           for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  
@@ -344,15 +348,50 @@ int closed(char** tableau) {
             stringStack[currentStackIndex][j] =  stringStack[currentStackIndex-1][j];
           }
 
+          int arrLength = arrayLength_Int(stringStack[currentStackIndex]);
+          stringStack[currentStackIndex][arrLength] = i;
+          stringStack[currentStackIndex][1+arrLength] = -1;
+
+          for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
+          {
+            for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
+            {
+              if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
+              {
+                numberOfClosedPaths++;
+                goto next_1;
+              }
+            }
+          }
+          next_1:
+          ;
         }
         else if (numberOfstars == currentStackIndex)   
         {
 
+          numberOfPaths++;
           for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  
           {
             stringStack[currentStackIndex][j] =  stringStack[currentStackIndex-1][j];
           }
 
+          int arrLength = arrayLength_Int(stringStack[currentStackIndex]);
+          stringStack[currentStackIndex][arrLength] = i;
+          stringStack[currentStackIndex][1+arrLength] = -1;
+
+          for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
+          {
+            for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
+            {
+              if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
+              {
+                numberOfClosedPaths++;
+                goto next_2;
+              }
+            }
+          }
+          next_2:
+          ;
         }
         else
         {
@@ -371,23 +410,36 @@ int closed(char** tableau) {
           stringStack[currentStackIndex][arrayLength_Int(stringStack[currentStackIndex])] = -1;
           
         }
+
+        int arrLength = arrayLength_Int(stringStack[currentStackIndex]);
+        stringStack[currentStackIndex][arrLength] = i;
+        stringStack[currentStackIndex][1+arrLength] = -1;
       }
 
-      int arrLength = arrayLength_Int(stringStack[currentStackIndex]);
-      stringStack[currentStackIndex][arrLength] = i;
-      stringStack[currentStackIndex][1+arrLength] = -1;
-
-      for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
+      else
       {
-        for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
+          int arrLength = arrayLength_Int(stringStack[currentStackIndex]);
+          stringStack[currentStackIndex][arrLength] = i;
+          stringStack[currentStackIndex][1+arrLength] = -1;
+      }
+
+      outerloop:
+      {
+        for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
         {
-          if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
+          for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
           {
-            printf("\nTableau closed, formula not satisfiable. Contradiction: %s and %s", tableau[stringStack[currentStackIndex][j]], tableau[stringStack[currentStackIndex][k]]);
-            return 1;
+            if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
+            {
+              numberOfClosedPaths++;
+              goto next_3;
+            }
           }
         }
       }
+
+      next_3:
+      
 
           for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)
           {
@@ -397,6 +449,13 @@ int closed(char** tableau) {
          
   }
 
+
+  if (numberOfPaths <= numberOfClosedPaths)
+  {
+    printf("\nTableau closed, formula not satisfiable. numberOfPaths:%d    numberOfClosedPaths:%d   ",numberOfPaths, numberOfClosedPaths);
+    return 1;
+  }
+  
   printf("\nTableau not closed, formula satisfiable.");
   return 0;
   
