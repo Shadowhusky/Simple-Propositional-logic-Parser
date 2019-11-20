@@ -4,11 +4,11 @@
 
 
 
-int Fsize=50; /*maximum formula length*/
-int inputs =20;/* number of formulas expected in input.txt*/
+int Fsize = 50; /*maximum formula length*/
+int inputs = 20;/* number of formulas expected in input.txt*/
 int i;/* in case you need it */
-int ThSize=100;/* maximum size of set of formulas*/
-int TabSize=500; /*maximum length of tableau queue*/
+int ThSize = 100;/* maximum size of set of formulas*/
+int TabSize = 500; /*maximum length of tableau queue*/
 
 int i;
 int j;
@@ -520,14 +520,16 @@ char** constructTableau(char** input, int index, int counter){
     char* New_R_Part;
     if(string[0]=='-')
     {
+
       if(parse(string+1)!=3) 
       {
         return input;
       }
+      L_Part = partone(string+1);
+      R_Part = parttwo(string+1);
       char* temp = deleteOuterBrace(string+1);
+
       binaryOp = temp[getMiddleOperator(temp)];    
-      L_Part = partone(temp);
-      R_Part = parttwo(temp);
       if (binaryOp=='^')
       {
         binaryOp = 'v';
@@ -580,8 +582,7 @@ char** constructTableau(char** input, int index, int counter){
       input[arrLength+2]="\0";
 
       constructTableau(input, arrLength, counter);
-
-      if ( temp_New_L_Part[getMiddleOperator( temp_New_L_Part )] =='^' )
+      if ( getMiddleOperator( temp_New_L_Part ) == 0 || temp_New_L_Part[getMiddleOperator( temp_New_L_Part )] =='^' )   //Single predicate or alpha
       {
         constructTableau(input, arrLength+1, counter);
       }
