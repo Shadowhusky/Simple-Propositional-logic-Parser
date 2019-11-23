@@ -4,23 +4,22 @@
 
 
 
-int Fsize = 50; /*maximum formula length*/
-int inputs = 20;/* number of formulas expected in input.txt*/
+int Fsize = 20000; /*maximum formula length*/
+int inputs = 1;/* number of formulas expected in input.txt*/
 int i;/* in case you need it */
 int ThSize = 100;/* maximum size of set of formulas*/
-int TabSize = 500; /*maximum length of tableau queue*/
+int TabSize = 20000; /*maximum length of tableau queue*/
 
-int i;
 int j;
 
 int splitCounter;
 
 
-
+                                            
 //Delete the outmost braces if it exist, to help function 'isPropositional()' run properly
 char* deleteOuterBrace(char *g)
 {
-  //Create new variable with same value to avoid changing in original value
+  //Create new variable with same value to avoid changing in origina value
   char* temp = strdup(g);
 
   char scanner=*temp;
@@ -113,7 +112,6 @@ int getMiddleOperator(char* g)
 int isPropositional(char *g,int counter)
 {
   char* temp = strdup(g);
-
   //Detect outer braces
   while (*temp=='-')
   {
@@ -128,6 +126,12 @@ int isPropositional(char *g,int counter)
   //     return 0;
   //   }
   // }
+
+  if (strcmp(deleteOuterBrace(temp),temp) == 0 && getMiddleOperator(temp) != 0)
+  {
+    return 0;
+  }
+  
 
   temp=deleteOuterBrace(temp);
 
@@ -319,11 +323,11 @@ int closed(char** tableau) {
 
   int numberOfPaths = 1;
   int numberOfClosedPaths = 0;
-  int** stringStack = (int**) malloc((100)*sizeof(int*));
-  for (size_t i = 0; i < 100; i++)
+  int** stringStack = (int**) malloc((TabSize)*sizeof(int*));
+  for (size_t i = 0; i < TabSize; i++)
   {
-    stringStack[i] = (int*) malloc((100)*sizeof(int));
-    for (size_t j = 0; j < 100; j++)
+    stringStack[i] = (int*) malloc((TabSize)*sizeof(int));
+    for (size_t j = 0; j < TabSize; j++)
     {
       stringStack[i][j] = -1;
     }
@@ -341,6 +345,21 @@ int closed(char** tableau) {
         {
           
           numberOfPaths++;
+          for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
+          {
+            for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
+            {
+              if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
+              {
+                numberOfClosedPaths++;
+                printf("\n\n\033[0;31mContradiction: %s and %s\033[0m\n",tableau[stringStack[currentStackIndex][j]], tableau[stringStack[currentStackIndex][k]]);
+                goto next_1;
+              }
+            }
+          }
+          next_1:
+          ;
+
           currentStackIndex = numberOfstars;
 
           for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  
@@ -351,6 +370,11 @@ int closed(char** tableau) {
           int arrLength = arrayLength_Int(stringStack[currentStackIndex]);
           stringStack[currentStackIndex][arrLength] = i;
           stringStack[currentStackIndex][1+arrLength] = -1;
+        }
+        else if (numberOfstars == currentStackIndex)   
+        {
+
+          numberOfPaths++;
 
           for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
           {
@@ -359,17 +383,13 @@ int closed(char** tableau) {
               if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
               {
                 numberOfClosedPaths++;
-                goto next_1;
+                printf("\n\n\033[0;31mContradiction: %s and %s\033[0m\n",tableau[stringStack[currentStackIndex][j]], tableau[stringStack[currentStackIndex][k]]);
+                goto next_2;
               }
             }
           }
-          next_1:
+          next_2:
           ;
-        }
-        else if (numberOfstars == currentStackIndex)   
-        {
-
-          numberOfPaths++;
           for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  
           {
             stringStack[currentStackIndex][j] =  stringStack[currentStackIndex-1][j];
@@ -378,20 +398,6 @@ int closed(char** tableau) {
           int arrLength = arrayLength_Int(stringStack[currentStackIndex]);
           stringStack[currentStackIndex][arrLength] = i;
           stringStack[currentStackIndex][1+arrLength] = -1;
-
-          for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
-          {
-            for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
-            {
-              if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
-              {
-                numberOfClosedPaths++;
-                goto next_2;
-              }
-            }
-          }
-          next_2:
-          ;
         }
         else
         {
@@ -407,13 +413,11 @@ int closed(char** tableau) {
           {
             stringStack[currentStackIndex][j] =  stringStack[currentStackIndex-1][j];
           }
-          stringStack[currentStackIndex][arrayLength_Int(stringStack[currentStackIndex])] = -1;
+          int arrLength = arrayLength_Int(stringStack[currentStackIndex]);
+          stringStack[currentStackIndex][arrLength] = i;
+          stringStack[currentStackIndex][1+arrLength] = -1;
           
         }
-
-        int arrLength = arrayLength_Int(stringStack[currentStackIndex]);
-        stringStack[currentStackIndex][arrLength] = i;
-        stringStack[currentStackIndex][1+arrLength] = -1;
       }
 
       else
@@ -422,25 +426,7 @@ int closed(char** tableau) {
           stringStack[currentStackIndex][arrLength] = i;
           stringStack[currentStackIndex][1+arrLength] = -1;
       }
-
-      outerloop:
-      {
-        for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
-        {
-          for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
-          {
-            if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
-            {
-              numberOfClosedPaths++;
-              goto next_3;
-            }
-          }
-        }
-      }
-
-      next_3:
       
-
           for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)
           {
             printf("\nLevel: %i      String: %s", currentStackIndex, tableau[stringStack[currentStackIndex][j]]);
@@ -449,6 +435,21 @@ int closed(char** tableau) {
          
   }
 
+    for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
+    {
+      for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
+      {
+        if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
+        {
+          numberOfClosedPaths++;
+          printf("\n\n\033[0;31mContradiction: %s and %s\033[0m\n",tableau[stringStack[currentStackIndex][j]], tableau[stringStack[currentStackIndex][k]]);
+          goto next_3;
+        }
+      }
+    }
+    
+
+  next_3:
 
   if (numberOfPaths <= numberOfClosedPaths)
   {
@@ -456,7 +457,7 @@ int closed(char** tableau) {
     return 1;
   }
   
-  printf("\nTableau not closed, formula satisfiable.");
+  printf("\nTableau not closed, formula satisfiable. numberOfPaths:%d    numberOfClosedPaths:%d   ",numberOfPaths, numberOfClosedPaths);
   return 0;
   
 
@@ -498,20 +499,29 @@ int printTableau(char** tab)
 
 }
 
-char** constructTableau(char** input, int index, int counter){
+char** constructTableau(char** input, int* tickedInput, int counter){
 
     int arrLength = arrayLength_2D(input);
 
     char* string;
 
-    for (size_t i = 0; i < arrayLength(input[index]); i++)
-    {
-      if (input[index][i]!='*')
+    int index = 0;
+
+    for (size_t i = 0; i < arrLength; i++) //Find the string haven't been ticked
+    {       
+      if (tickedInput[i] != 1 &&  arrayLength( simplifyNegation(strdup(input[i]+countFromHead(input[i],'*'))) ) > 2  )
       {
-        string = simplifyNegation( strdup(input[index]+i) );
+        index = i;
         break;
       }
     }
+
+    if (index == 0 && arrLength > 1)
+    {
+      return input;
+    }
+
+    string = simplifyNegation( strdup(input[index]+countFromHead(input[index],'*')) );
 
     char binaryOp;    
     char* L_Part;
@@ -520,11 +530,6 @@ char** constructTableau(char** input, int index, int counter){
     char* New_R_Part;
     if(string[0]=='-')
     {
-
-      if(parse(string+1)!=3) 
-      {
-        return input;
-      }
       L_Part = partone(string+1);
       R_Part = parttwo(string+1);
       char* temp = deleteOuterBrace(string+1);
@@ -551,10 +556,6 @@ char** constructTableau(char** input, int index, int counter){
     }
     else
     {
-      if(parse(string)!=3) 
-      {
-        return input;
-      }
       L_Part = partone(string);
       R_Part = parttwo(string);
       char* temp = deleteOuterBrace(string);
@@ -572,54 +573,48 @@ char** constructTableau(char** input, int index, int counter){
     printf("\n\nL_Part: >>>>>>>>>> %s <<<<<<<<<<", New_L_Part);
     printf("\nR_Part: >>>>>>>>>> %s <<<<<<<<<<", New_R_Part);
     printf("\nbinaryOp: ========== %c ==========\n", binaryOp);
-    
+
     if(binaryOp == '^')
     {
-      input[arrLength] = New_L_Part;
-      char* temp_New_L_Part =strdup(deleteOuterBrace(New_L_Part));
+        input[arrLength] = New_L_Part;
+        char* temp_New_L_Part =strdup(deleteOuterBrace(New_L_Part));
 
-      input[arrLength+1] = New_R_Part;
-      input[arrLength+2]="\0";
+        input[arrLength+1] = New_R_Part;
+        input[arrLength+2]="\0";
 
-      constructTableau(input, arrLength, counter);
-      if ( getMiddleOperator( temp_New_L_Part ) == 0 || temp_New_L_Part[getMiddleOperator( temp_New_L_Part )] =='^' )   //Single predicate or alpha
-      {
-        constructTableau(input, arrLength+1, counter);
-      }
+        tickedInput[index] = 1;
+
+        constructTableau(input, tickedInput, counter);
     }
     //else binaryOp == 'v'
     else
     {
-      if(index != arrLength-1)
-      {
-        input[arrLength] = addAtHead(New_L_Part,'*', counter+1);
-        input[arrLength+1] = "\0";
-        constructTableau(input, arrLength-1, counter+1);
+      tickedInput[index] = 1;
 
-        int oldArrLength=arrLength;
-        arrLength = arrayLength_2D(input);
-        input[arrLength] = addAtHead(New_R_Part,'*', counter+1);
-        input[arrLength+1] = "\0";
-        constructTableau(input, oldArrLength-1, counter+1);
-        
-        arrLength = arrayLength_2D(input);
-        input[arrLength]="\0";
-      }
-      else
+      int* oldTickedInput = (int*)malloc(arrLength*sizeof(int));
+      for (size_t i = 0; i < arrLength; i++)
       {
-        input[arrLength] = addAtHead(New_L_Part,'*', counter+1);
-        input[arrLength+1] = "\0";
-        constructTableau(input, arrLength, counter+1);
-
-        arrLength = arrayLength_2D(input);
-        input[arrLength] = addAtHead(New_R_Part,'*', counter+1);
-        input[arrLength+1] = "\0";
-        constructTableau(input, arrLength, counter+1);
-        
-        arrLength = arrayLength_2D(input);
-        input[arrLength]="\0";
+        oldTickedInput[i] = tickedInput[i];
       }
 
+      input[arrLength] = addAtHead(New_L_Part,'*', counter+1);
+      input[arrLength+1] = "\0";
+      constructTableau(input, tickedInput, counter+1);
+
+      for (size_t i = 0; i < arrLength; i++)
+      {
+        tickedInput[i] = oldTickedInput[i];
+      }
+
+      arrLength = arrayLength_2D(input);
+
+      input[arrLength] = addAtHead(New_R_Part,'*', counter+1);
+      tickedInput[arrLength] = 0;
+      input[arrLength+1] = "\0";
+      constructTableau(input, tickedInput, counter+1);
+      
+      // arrLength = arrayLength_2D(oldInput);
+      // input[arrLength]="\0";
     }
     return input;
 
@@ -631,7 +626,7 @@ char** constructTableau(char** input, int index, int counter){
 /*You should not need to alter the program below.*/
 int main()
 { /*input 10 strings from "input.txt" */
-    char *name = malloc(Fsize);
+    char *name = (char*)malloc(Fsize*sizeof(char));
 
     FILE *fp, *fpout;
 
@@ -659,21 +654,29 @@ int main()
       }
       if (type!=0)
       {
-          char** name_ = (char**) malloc((100)*sizeof(char*)); //Prevent name from changing
-          for (size_t i = 0; i < 100; i++)
+          char** name_ = (char**) malloc((TabSize)*sizeof(char*)); //Prevent name from changing
+          int * ticketInput = (int*) malloc((TabSize)*sizeof(int));
+
+          for (size_t i = 0; i < TabSize; i++)
           {
-            name_[i]=(char*) malloc((100)*sizeof(char));
+            name_[i]=(char*) malloc((Fsize)*sizeof(char));
           }
+
+          for (size_t i = 1; i < TabSize; i++)
+          {
+            ticketInput[i] = 0;
+          }
+
           name_[0]=strdup(name);
           name_[1]="\0";
-          char** tab = constructTableau(name_,0,0); 
+
+          char** tab = constructTableau(name_,ticketInput,0); 
           printf("\n\033[0;31mTableau_Size: ######### %d #########\033[0m", arrayLength_2D(tab));
           printTableau(tab);
-
           if (closed(tab))  fprintf(fpout, "%s is not satisfiable.\n", name);
           else fprintf(fpout, "%s is satisfiable.\n", name);
           free(name_);
-          free(tab);
+          free(ticketInput);
       }
       else  fprintf(fpout, "I told you, %s is not a formula.\n", name);
   }
