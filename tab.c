@@ -4,11 +4,11 @@
 
 
 
-int Fsize = 20000; /*maximum formula length*/
-int inputs = 1;/* number of formulas expected in input.txt*/
+int Fsize = 200; /*maximum formula length*/
+int inputs = 20;/* number of formulas expected in input.txt*/
 int i;/* in case you need it */
 int ThSize = 100;/* maximum size of set of formulas*/
-int TabSize = 20000; /*maximum length of tableau queue*/
+int TabSize = 200; /*maximum length of tableau queue*/
 
 int j;
 
