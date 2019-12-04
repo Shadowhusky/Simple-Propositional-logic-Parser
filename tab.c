@@ -29,7 +29,8 @@ char* deleteOuterBrace(char *g)
 
     int braceStack=1;
 
-    for (int i = 1; i <strlen(temp); i++)
+    int i;
+    for (i = 1; i <strlen(temp); i++)
     {
 
       scanner=*(temp+i);
@@ -65,7 +66,8 @@ int getMiddleOperator(char* g)
 {
   //Use braceStack to find the middle operator
   int braceStack;
-  for (int i = 0; i <=strlen(g); i++)
+  int i;
+  for (i = 0; i <=strlen(g); i++)
   {
     if (*(g+i)=='(')
     {
@@ -138,8 +140,8 @@ int isPropositional(char *g,int counter)
   //Visualize the data for test
   char* align; 
   align=(char*)malloc(counter*sizeof(char)); 
- 
-  for (size_t j = 0; j <= counter; j++)
+  size_t j;
+  for (j = 0; j <= counter; j++)
   {    
     *(align+j)='=';
     if (j==counter)
@@ -285,7 +287,8 @@ int countFromHead(char* input, char symbol)
 {
   char* output = strdup(input);
   int counter = 0;
-  for (size_t i = 0; i < arrayLength(input); i++)
+  size_t i;
+  for (i = 0; i < arrayLength(input); i++)
   {
     if (input[i]==symbol)
     {
@@ -324,17 +327,20 @@ int closed(char** tableau) {
   int numberOfPaths = 1;
   int numberOfClosedPaths = 0;
   int** stringStack = (int**) malloc((TabSize)*sizeof(int*));
-  for (size_t i = 0; i < TabSize; i++)
+  size_t i;
+  size_t j;
+  size_t k;
+  for (i = 0; i < TabSize; i++)
   {
     stringStack[i] = (int*) malloc((TabSize)*sizeof(int));
-    for (size_t j = 0; j < TabSize; j++)
+    for (j = 0; j < TabSize; j++)
     {
       stringStack[i][j] = -1;
     }
   }
   int currentStackIndex=0;
   int numberOfstars;
-  for (size_t i = 0; i < arrayLength_2D(tableau); i++)
+  for (i = 0; i < arrayLength_2D(tableau); i++)
   {
       numberOfstars = countFromHead(tableau[i],'*');
       printf("\nCurrentLevel: %d      NextLevel: %d", currentStackIndex, numberOfstars);
@@ -345,9 +351,9 @@ int closed(char** tableau) {
         {
           
           numberOfPaths++;
-          for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
+          for (j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
           {
-            for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
+            for (k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
             {
               if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
               {
@@ -362,7 +368,7 @@ int closed(char** tableau) {
 
           currentStackIndex = numberOfstars;
 
-          for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  
+          for (j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  
           {
             stringStack[currentStackIndex][j] =  stringStack[currentStackIndex-1][j];
           }
@@ -376,9 +382,9 @@ int closed(char** tableau) {
 
           numberOfPaths++;
 
-          for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
+          for (j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
           {
-            for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
+            for (k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
             {
               if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
               {
@@ -390,7 +396,7 @@ int closed(char** tableau) {
           }
           next_2:
           ;
-          for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  
+          for (j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  
           {
             stringStack[currentStackIndex][j] =  stringStack[currentStackIndex-1][j];
           }
@@ -409,7 +415,7 @@ int closed(char** tableau) {
           }
           
 
-          for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex-1]); j++)  
+          for (j = 0; j < arrayLength_Int(stringStack[currentStackIndex-1]); j++)  
           {
             stringStack[currentStackIndex][j] =  stringStack[currentStackIndex-1][j];
           }
@@ -427,7 +433,7 @@ int closed(char** tableau) {
           stringStack[currentStackIndex][1+arrLength] = -1;
       }
       
-          for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)
+          for (j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)
           {
             printf("\nLevel: %i      String: %s", currentStackIndex, tableau[stringStack[currentStackIndex][j]]);
           }
@@ -435,9 +441,9 @@ int closed(char** tableau) {
          
   }
 
-    for (size_t j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
+    for (j = 0; j < arrayLength_Int(stringStack[currentStackIndex]); j++)  //Check if the tableau closed at this stage
     {
-      for (size_t k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
+      for (k = 0; k < arrayLength_Int(stringStack[currentStackIndex]); k++)
       {
         if (isContradiction(tableau[stringStack[currentStackIndex][j]] , tableau[stringStack[currentStackIndex][k]] ) == 1 )  //Return closed if find contradiction
         {
@@ -467,7 +473,8 @@ int closed(char** tableau) {
 char* simplifyNegation(char* input)
 {
   int sumOfNegation=0;
-  for (size_t i = 0; input[i]=='-' ; i++)
+  size_t i;
+  for (i = 0; input[i]=='-' ; i++)
   {
     sumOfNegation++;
   }
@@ -481,7 +488,8 @@ char* simplifyNegation(char* input)
 char* addAtHead(char* input, char symbol, int amount)
 {
   char* output = (char*) malloc((arrayLength(input)+amount)*sizeof(char));
-  for (size_t i = 0; i < amount; i++)
+  size_t i;
+  for (i = 0; i < amount; i++)
   {
       *(output+i)=symbol;
   }
@@ -507,7 +515,9 @@ char** constructTableau(char** input, int* tickedInput, int counter){
 
     int index = 0;
 
-    for (size_t i = 0; i < arrLength; i++) //Find the string haven't been ticked
+    size_t i;
+    
+    for (i = 0; i < arrLength; i++) //Find the string haven't been ticked
     {       
       if (tickedInput[i] != 1 &&  arrayLength( simplifyNegation(strdup(input[i]+countFromHead(input[i],'*'))) ) > 2  )
       {
@@ -592,7 +602,7 @@ char** constructTableau(char** input, int* tickedInput, int counter){
       tickedInput[index] = 1;
 
       int* oldTickedInput = (int*)malloc(arrLength*sizeof(int));
-      for (size_t i = 0; i < arrLength; i++)
+      for (i = 0; i < arrLength; i++)
       {
         oldTickedInput[i] = tickedInput[i];
       }
@@ -601,7 +611,7 @@ char** constructTableau(char** input, int* tickedInput, int counter){
       input[arrLength+1] = "\0";
       constructTableau(input, tickedInput, counter+1);
 
-      for (size_t i = 0; i < arrLength; i++)
+      for (i = 0; i < arrLength; i++)
       {
         tickedInput[i] = oldTickedInput[i];
       }
@@ -656,13 +666,13 @@ int main()
       {
           char** name_ = (char**) malloc((TabSize)*sizeof(char*)); //Prevent name from changing
           int * ticketInput = (int*) malloc((TabSize)*sizeof(int));
-
-          for (size_t i = 0; i < TabSize; i++)
+          size_t i;
+          for (i = 0; i < TabSize; i++)
           {
             name_[i]=(char*) malloc((Fsize)*sizeof(char));
           }
 
-          for (size_t i = 1; i < TabSize; i++)
+          for (i = 1; i < TabSize; i++)
           {
             ticketInput[i] = 0;
           }
