@@ -637,7 +637,7 @@ char** constructTableau(char** input, int* tickedInput, int counter){
 /*You should not need to alter the program below.*/
 int main()
 { /*input 10 strings from "input.txt" */
-    char *name = (char*)malloc(Fsize*sizeof(char));
+    char *name = malloc(Fsize);
 
     FILE *fp, *fpout;
 
