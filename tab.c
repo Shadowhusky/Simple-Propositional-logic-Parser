@@ -409,7 +409,8 @@ int closed(char** tableau) {
         {
           currentStackIndex++;
           int arrSize = arrayLength_Int(stringStack[currentStackIndex]);
-          for (int m = 0; m < arrSize ; m++)
+          int m;
+          for (m = 0; m < arrSize ; m++)
           {
             stringStack[currentStackIndex][m] = -1;
           }
@@ -499,8 +500,8 @@ char* addAtHead(char* input, char symbol, int amount)
 
 int printTableau(char** tab)
 {
-
-  for(size_t i=0; i <arrayLength_2D(tab);i++) {
+  size_t i;
+  for(i=0; i <arrayLength_2D(tab);i++) {
     printf("\n\033[0;31mTableau: ######### %s #########\033[0m", tab[i]);
   }
   printf("\n", tab[i]);
