@@ -140,7 +140,7 @@ int isPropositional(char *g,int counter)
   //Visualize the data for test
   char* align; 
   align=(char*)malloc(counter*sizeof(char)); 
-  size_t j;
+  int j;
   for (j = 0; j <= counter; j++)
   {    
     *(align+j)='=';
@@ -287,7 +287,7 @@ int countFromHead(char* input, char symbol)
 {
   char* output = strdup(input);
   int counter = 0;
-  size_t i;
+  int i;
   for (i = 0; i < arrayLength(input); i++)
   {
     if (input[i]==symbol)
@@ -327,9 +327,9 @@ int closed(char** tableau) {
   int numberOfPaths = 1;
   int numberOfClosedPaths = 0;
   int** stringStack = (int**) malloc((TabSize)*sizeof(int*));
-  size_t i;
-  size_t j;
-  size_t k;
+  int i;
+  int j;
+  int k;
   for (i = 0; i < TabSize; i++)
   {
     stringStack[i] = (int*) malloc((TabSize)*sizeof(int));
@@ -474,7 +474,7 @@ int closed(char** tableau) {
 char* simplifyNegation(char* input)
 {
   int sumOfNegation=0;
-  size_t i;
+  int i;
   for (i = 0; input[i]=='-' ; i++)
   {
     sumOfNegation++;
@@ -489,7 +489,7 @@ char* simplifyNegation(char* input)
 char* addAtHead(char* input, char symbol, int amount)
 {
   char* output = (char*) malloc((arrayLength(input)+amount)*sizeof(char));
-  size_t i;
+  int i;
   for (i = 0; i < amount; i++)
   {
       *(output+i)=symbol;
@@ -500,7 +500,7 @@ char* addAtHead(char* input, char symbol, int amount)
 
 int printTableau(char** tab)
 {
-  size_t i;
+  int i;
   for(i=0; i <arrayLength_2D(tab);i++) {
     printf("\n\033[0;31mTableau: ######### %s #########\033[0m", tab[i]);
   }
@@ -516,7 +516,7 @@ char** constructTableau(char** input, int* tickedInput, int counter){
 
     int index = 0;
 
-    size_t i;
+    int i;
     
     for (i = 0; i < arrLength; i++) //Find the string haven't been ticked
     {       
@@ -667,7 +667,7 @@ int main()
       {
           char** name_ = (char**) malloc((TabSize)*sizeof(char*)); //Prevent name from changing
           int * ticketInput = (int*) malloc((TabSize)*sizeof(int));
-          size_t i;
+          int i;
           for (i = 0; i < TabSize; i++)
           {
             name_[i]=(char*) malloc((Fsize)*sizeof(char));
